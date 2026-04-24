@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>职业时间线</title>
+  <style>
+    :root {
+      --color-primary: #1f1e1c;
+      --color-secondary: #6b6963;
+      --color-tertiary: #c96442;
+      --color-neutral: #faf9f5;
+      --color-surface: #f2efe7;
+      --color-border: #e4dfd4;
+      --color-accent-soft: #f4e3d7;
+      --font-serif: "Source Han Serif SC", "Noto Serif SC", "Source Serif 4", Georgia, serif;
+      --font-sans: "Source Han Sans SC", "Noto Sans SC", Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+      color-scheme: light;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--color-neutral);
+      color: var(--color-primary);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.75;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      text-underline-offset: 0.18em;
+    }
+
+    a:hover,
+    a:focus-visible {
+      color: var(--color-tertiary);
+      text-decoration: underline;
+    }
+
+    a:focus-visible {
+      outline: 2px solid var(--color-tertiary);
+      outline-offset: 2px;
+    }
+
+    .page {
+      width: min(1080px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 56px 0 72px;
+    }
+
+    .timeline-title {
+      margin: 0 0 44px;
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 56px;
+    }
+
+    .company-section {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: 40px;
+      scroll-margin-top: 32px;
+    }
+
+    .company-period {
+      color: var(--color-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      padding-top: 6px;
+    }
+
+    .company-main {
+      min-width: 0;
+      padding-bottom: 56px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .company-section:last-child .company-main {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .company-header {
+      margin-bottom: 28px;
+    }
+
+    .company-name {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: 0;
+    }
+
+    .company-position {
+      max-width: 680px;
+      margin: 10px 0 0;
+      color: var(--color-secondary);
+      line-height: 1.7;
+    }
+
+    .year-list {
+      position: relative;
+      display: grid;
+      gap: 20px;
+    }
+
+    .year-list::before {
+      position: absolute;
+      top: 12px;
+      bottom: 12px;
+      left: 43px;
+      width: 1px;
+      background: var(--color-border);
+      content: "";
+    }
+
+    .year-event {
+      position: relative;
+      display: grid;
+      grid-template-columns: 88px minmax(0, 1fr);
+      gap: 24px;
+      scroll-margin-top: 32px;
+    }
+
+    .event-year {
+      position: relative;
+      z-index: 1;
+      padding-top: 20px;
+      color: var(--color-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.9375rem;
+      line-height: 1.5;
+    }
+
+    .event-year::after {
+      position: absolute;
+      top: 28px;
+      right: -7px;
+      width: 13px;
+      height: 13px;
+      border: 1px solid var(--color-tertiary);
+      border-radius: 50%;
+      background: var(--color-neutral);
+      content: "";
+    }
+
+    .event-body {
+      position: relative;
+      padding: 22px 24px 24px;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      background: var(--color-surface);
+    }
+
+    .event-body h3 {
+      max-width: 720px;
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: 1.1875rem;
+      font-weight: 600;
+      line-height: 1.35;
+      letter-spacing: 0;
+    }
+
+    .event-fields {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      margin-top: 22px;
+    }
+
+    .field-label {
+      margin-bottom: 8px;
+      color: var(--color-tertiary);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .field ul {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding-left: 1.1em;
+    }
+
+    .field li {
+      padding-left: 0.15em;
+    }
+
+    @media (max-width: 860px) {
+      .page {
+        padding-top: 40px;
+      }
+
+      .timeline-title {
+        margin-bottom: 32px;
+      }
+
+      .company-section {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .company-period {
+        padding-top: 0;
+      }
+
+      .company-main {
+        padding-bottom: 44px;
+      }
+
+      .year-event {
+        grid-template-columns: 72px minmax(0, 1fr);
+        gap: 18px;
+      }
+
+      .year-list::before {
+        left: 35px;
+      }
+
+      .event-fields {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .page {
+        width: min(100% - 40px, 1080px);
+        padding-top: 32px;
+      }
+
+      .timeline-title {
+        font-size: 1.75rem;
+      }
+
+      .company-name {
+        font-size: 1.3125rem;
+      }
+
+      .year-event {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .year-list::before,
+      .event-year::after {
+        display: none;
+      }
+
+      .event-year {
+        padding-top: 0;
+      }
+
+      .event-body {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page" aria-labelledby="timeline-title">
+    <h1 class="timeline-title" id="timeline-title">职业时间线</h1>
+
+    <div class="timeline">
+      <section class="company-section" id="company-nascent" aria-labelledby="nascent-title">
+        <div class="company-period">2021.02 - 至今</div>
+        <div class="company-main">
+          <header class="company-header">
+            <h2 class="company-name" id="nascent-title">
+              <a href="#company-nascent">杭州南讯软件科技有限公司</a>
+            </h2>
+            <p class="company-position">电商 SaaS、会员运营与互动营销产品，从功能开发走向前端系统负责人。</p>
+          </header>
+
+          <div class="year-list">
+            <article class="year-event" id="nascent-2024">
+              <div class="event-year"><a href="#nascent-2024">2024</a></div>
+              <div class="event-body">
+                <h3>会员与互动营销能力继续平台化</h3>
+                <div class="event-fields">
+                  <section class="field">
+                    <div class="field-label">做了什么</div>
+                    <ul>
+                      <li>持续参与会员俱乐部与互动工坊相关能力建设</li>
+                      <li>处理多店铺、多入口、多会员状态下的登录、授权、埋点与分享问题</li>
+                      <li>参与活动插件、动态组件、页面装修等扩展能力建设</li>
+                    </ul>
+                  </section>
+                  <section class="field">
+                    <div class="field-label">产出 / 价值</div>
+                    <ul>
+                      <li>支撑 100+ 店铺会员 SaaS 与 200+ 店铺互动营销场景</li>
+                      <li>提升多端会员运营链路稳定性</li>
+                    </ul>
+                  </section>
+                </div>
+              </div>
+            </article>
+
+            <article class="year-event" id="nascent-2022">
+              <div class="event-year"><a href="#nascent-2022">2022</a></div>
+              <div class="event-body">
+                <h3>从活动交付走向配置化和复用</h3>
+                <div class="event-fields">
+                  <section class="field">
+                    <div class="field-label">做了什么</div>
+                    <ul>
+                      <li>参与互动工坊从 0 到 1 建设</li>
+                      <li>沉淀活动配置、奖品、任务、商品、授权、领奖等通用能力</li>
+                      <li>支撑签到、抽奖、复购、邀请、积分兑换等活动形态</li>
+                    </ul>
+                  </section>
+                  <section class="field">
+                    <div class="field-label">产出 / 价值</div>
+                    <ul>
+                      <li>推动活动从定制开发走向配置化 / 引擎化</li>
+                      <li>降低多品牌、多活动场景的重复开发成本</li>
+                    </ul>
+                  </section>
+                </div>
+              </div>
+            </article>
+
+            <article class="year-event" id="nascent-2021">
+              <div class="event-year"><a href="#nascent-2021">2021</a></div>
+              <div class="event-body">
+                <h3>进入电商 SaaS 与小程序业务场景</h3>
+                <div class="event-fields">
+                  <section class="field">
+                    <div class="field-label">做了什么</div>
+                    <ul>
+                      <li>2021-02-05 入职南讯</li>
+                      <li>参与淘宝小程序、微信小程序、H5 与 SaaS 后台业务开发</li>
+                      <li>在多项目并行中承担核心前端交付工作</li>
+                    </ul>
+                  </section>
+                  <section class="field">
+                    <div class="field-label">产出 / 价值</div>
+                    <ul>
+                      <li>建立电商 SaaS、会员运营和互动营销业务理解</li>
+                      <li>为后续承担前端主管和平台能力建设打基础</li>
+                    </ul>
+                  </section>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="company-section" id="company-twelve-patterns" aria-labelledby="twelve-title">
+        <div class="company-period">2019.07 - 2021.02</div>
+        <div class="company-main">
+          <header class="company-header">
+            <h2 class="company-name" id="twelve-title">
+              <a href="#company-twelve-patterns">杭州十二章纹文化传播有限公司</a>
+            </h2>
+            <p class="company-position">漫画约稿、项目协同与 H5 活动阶段，从业务开发升级到前端负责人。</p>
+          </header>
+
+          <div class="year-list">
+            <article class="year-event" id="twelve-2020">
+              <div class="event-year"><a href="#twelve-2020">2020</a></div>
+              <div class="event-body">
+                <h3>承担前端负责人职责，负责平台与活动页面</h3>
+                <div class="event-fields">
+                  <section class="field">
+                    <div class="field-label">做了什么</div>
+                    <ul>
+                      <li>负责阅燃画台 PC 端、后台系统与移动端官网开发</li>
+                      <li>搭建动态路由、角色菜单、按钮级权限和页面缓存</li>
+                      <li>负责章节支付、章节详情、赛事活动等 H5 页面</li>
+                    </ul>
+                  </section>
+                  <section class="field">
+                    <div class="field-label">产出 / 价值</div>
+                    <ul>
+                      <li>支撑漫画约稿协同、任务管理、画手用户和活动后台</li>
+                      <li>提升后台系统权限控制、页面缓存与移动端适配体验</li>
+                    </ul>
+                  </section>
+                </div>
+              </div>
+            </article>
+
+            <article class="year-event" id="twelve-2019">
+              <div class="event-year"><a href="#twelve-2019">2019</a></div>
+              <div class="event-body">
+                <h3>从业务开发升级到前端负责人</h3>
+                <div class="event-fields">
+                  <section class="field">
+                    <div class="field-label">做了什么</div>
+                    <ul>
+                      <li>负责前端基础框架搭建与公共组件封装</li>
+                      <li>二次封装 Axios，统一接口拦截与异常状态处理</li>
+                      <li>对小组成员提交代码进行审查</li>
+                    </ul>
+                  </section>
+                  <section class="field">
+                    <div class="field-label">产出 / 价值</div>
+                    <ul>
+                      <li>减少业务组件重复逻辑</li>
+                      <li>推动代码规范、提交规范和团队协作质量提升</li>
+                    </ul>
+                  </section>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="company-section" id="company-bolan" aria-labelledby="bolan-title">
+        <div class="company-period">2016.04 - 2019.04</div>
+        <div class="company-main">
+          <header class="company-header">
+            <h2 class="company-name" id="bolan-title">
+              <a href="#company-bolan">浙江博澜文化股份有限公司</a>
+            </h2>
+            <p class="company-position">在线幼儿游戏学习与内容分享平台，完成从页面到后台的完整交付训练。</p>
+          </header>
+
+          <div class="year-list">
+            <article class="year-event" id="bolan-2019">
+              <div class="event-year"><a href="#bolan-2019">2019</a></div>
+              <div class="event-body">
+                <h3>独立维护网站并提升代码可维护性</h3>
+                <div class="event-fields">
+                  <section class="field">
+                    <div class="field-label">做了什么</div>
+                    <ul>
+                      <li>后期独立负责整个网站维护</li>
+                      <li>对功能代码进行拆分和封装</li>
+                      <li>支持响应式、移动端和 PC 端页面开发</li>
+                    </ul>
+                  </section>
+                  <section class="field">
+                    <div class="field-label">产出 / 价值</div>
+                    <ul>
+                      <li>提升既有系统维护效率</li>
+                      <li>形成持续排查和修复线上问题的能力</li>
+                    </ul>
+                  </section>
+                </div>
+              </div>
+            </article>
+
+            <article class="year-event" id="bolan-2017">
+              <div class="event-year"><a href="#bolan-2017">2017</a></div>
+              <div class="event-body">
+                <h3>完整参与安吉游戏平台前后端开发</h3>
+                <div class="event-fields">
+                  <section class="field">
+                    <div class="field-label">做了什么</div>
+                    <ul>
+                      <li>负责后台用户管理、文章管理、富文本编辑器和评论模块</li>
+                      <li>参与数据库设计与接口实现</li>
+                      <li>参与项目需求对接</li>
+                    </ul>
+                  </section>
+                  <section class="field">
+                    <div class="field-label">产出 / 价值</div>
+                    <ul>
+                      <li>形成从页面到后台的完整业务交付视角</li>
+                      <li>建立 CMS 类功能开发经验</li>
+                    </ul>
+                  </section>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
